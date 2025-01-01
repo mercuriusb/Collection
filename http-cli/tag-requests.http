@@ -1,0 +1,40 @@
+###
+### List Tags
+GET http://localhost:8080/api/v1/tags
+Authorization: Bearer {{$auth.token("cldev")}}
+
+### Browse Tags
+GET http://localhost:8080/api/v1/tags/browse/root/Favoriten
+Authorization: Bearer {{$auth.token("cldev")}}
+
+### Get Tag with id
+GET http://localhost:8080/api/v1/tags/1
+Authorization: Bearer {{$auth.token("cldev")}}
+
+
+### get all bookmarks
+GET http://localhost:8080/api/v1/bookmarks
+Authorization: Bearer {{$auth.token("cldev")}}
+
+###
+POST http://127.0.0.1:3000
+Content-Type: application/json
+
+{
+  "url" : "https://www.t-online.de/nachrichten/deutschland/innenpolitik/id_100552302/strompreisrekorde-die-dunkelflaute-legt-ein-riesiges-problem-offen-.html"
+}
+
+
+### import bookmarks
+POST http://localhost:8080/api/v1/bookmarks/import
+Authorization: Bearer {{$auth.token("cldev")}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="field-name"; filename="Safari-Lesezeichen.html"
+
+< ./Safari-Lesezeichen.html
+--WebAppBoundary--
+
+
+
