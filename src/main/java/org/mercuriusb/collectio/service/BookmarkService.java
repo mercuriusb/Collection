@@ -58,7 +58,7 @@ public class BookmarkService{
   public BookmarkDto getById(Long id,long userId) throws WebApplicationException{
     Bookmark bookmark = repository.findById(id);
     if(bookmark == null){
-      throw new NotFoundException(String.format("Bookmakrs with id %s not found",id));
+      throw new NotFoundException(String.format("Bookmark with id %s not found",id));
     }
     return mapper.toDto(bookmark);
   }
