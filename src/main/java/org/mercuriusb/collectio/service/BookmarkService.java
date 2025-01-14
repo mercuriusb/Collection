@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotAllowedException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -14,21 +13,20 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.mercuriusb.collectio.dto.bookmark.BookmarkDto;
-import org.mercuriusb.collectio.dto.bookmark.BookmarkDtoBuilder;
-import org.mercuriusb.collectio.dto.bookmark.BookmarkExtractDto;
-import org.mercuriusb.collectio.dto.bookmarkmetadata.BookmarkMetaDataDto;
-import org.mercuriusb.collectio.dto.bookmarkmetadata.BookmarkMetaDataDtoBuilder;
-import org.mercuriusb.collectio.dto.tag.TagDto;
-import org.mercuriusb.collectio.dto.tag.TagDtoBuilder;
-import org.mercuriusb.collectio.dto.user.UserDto;
+import org.mercuriusb.collectio.dto.BookmarkDto;
+import org.mercuriusb.collectio.dto.BookmarkDtoBuilder;
+import org.mercuriusb.collectio.dto.BookmarkExtractDto;
+import org.mercuriusb.collectio.dto.BookmarkMetaDataDto;
+import org.mercuriusb.collectio.dto.BookmarkMetaDataDtoBuilder;
+import org.mercuriusb.collectio.dto.TagDto;
+import org.mercuriusb.collectio.dto.TagDtoBuilder;
+import org.mercuriusb.collectio.dto.UserDto;
 import org.mercuriusb.collectio.mapper.BookmarkMapper;
 import org.mercuriusb.collectio.mapper.TagMapper;
 import org.mercuriusb.collectio.model.Bookmark;
-import org.mercuriusb.collectio.repository.BookmarkMetaDataRepository;
 import org.mercuriusb.collectio.repository.BookmarkRepository;
-import org.mercuriusb.collectio.repository.TagRepository;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,7 +74,7 @@ public class BookmarkService{
 
     @Transactional
   public BookmarkDto createOrUpdate(BookmarkDto dto, long userId,boolean clearExistingTags) throws WebApplicationException{
-    Bookmark entity = repository.findByURL(dto.getUrl());
+    Bookmark entity = repository.findByURL(dto.url());
     if(entity == null){
       entity = mapper.toEntity(dto);
     }else{
@@ -115,7 +113,7 @@ public class BookmarkService{
   public BookmarkDto update(long id,BookmarkDto dto) throws WebApplicationException {
     Bookmark entity = repository.findById(id);
     if(entity == null){
-      throw new NotFoundException(String.format("No Bookmark found with id[%s]", dto.getId()));
+      throw new NotFoundException(String.format("No Bookmark found with id[%s]", dto.id()));
     }
     mapper.update(dto, entity);
     repository.persist(entity);
@@ -128,11 +126,11 @@ public class BookmarkService{
     Document doc = Jsoup.parse(bookmarkHTML);
 
     Element root = doc.body();
-    TagDto currentTagDto = new TagDtoBuilder()
-        .setUser(userDto)
-        .setValue("root")
-        .createTagDto();
-    currentTagDto = tagService.createIfNotExists(currentTagDto,userDto.getId());
+    TagDto currentTagDto = TagDtoBuilder.builder()
+        .user(userDto)
+        .value("root")
+        .build();
+    currentTagDto = tagService.createIfNotExists(currentTagDto,userDto.id());
     parseFolder(root, "root", userDto, currentTagDto);
 
   }
@@ -147,26 +145,26 @@ public class BookmarkService{
           if(child.tagName().equalsIgnoreCase("h3")){
             log.info("Folder: " + tempFolder);
             tempFolder = tempFolder + "/" + child.text();
-            currentTagDto = new TagDtoBuilder()
-                .setUser(userDto)
-                .setValue(tempFolder)
-                .createTagDto();
-            currentTagDto = tagService.createIfNotExists(currentTagDto,userDto.getId());
+            currentTagDto = TagDtoBuilder.builder()
+                .user(userDto)
+                .value(tempFolder)
+                .build();
+            currentTagDto = tagService.createIfNotExists(currentTagDto,userDto.id());
           }else if(child.tagName().equalsIgnoreCase("a")){
             String title = child.text();
             String url = child.attr("HREF");
-            BookmarkMetaDataDto bookmarkMetaDataDto = new BookmarkMetaDataDtoBuilder()
-                .setUser(userDto)
-                .setTitle(title)
-                .createBookmarkMetaDataDto();
-            BookmarkDto bookmarkDto = new BookmarkDtoBuilder()
-                .setOriginalTitle(title)
-                .setUrl(url)
-                .createBookmarkDto();
-            bookmarkDto.getTags().add(currentTagDto);
-            bookmarkDto.getBookmarkMetaData().add(bookmarkMetaDataDto);
+            BookmarkMetaDataDto bookmarkMetaDataDto = BookmarkMetaDataDtoBuilder.builder()
+                .user(userDto)
+                .title(title)
+                .build();
+            BookmarkDto bookmarkDto = BookmarkDtoBuilder.builder()
+                .originalTitle(title)
+                .url(url)
+                .build();
+            bookmarkDto.tags().add(currentTagDto);
+            bookmarkDto.bookmarkMetaData().add(bookmarkMetaDataDto);
             //log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            bookmarkDto = createOrUpdate(bookmarkDto, userDto.getId(),false);
+            bookmarkDto = createOrUpdate(bookmarkDto, userDto.id(),false);
             //log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             log.info("bookmark: " + currentFolder + ":" + title); // + ":" + url);
           }else if(child.tagName().equalsIgnoreCase("dl")){

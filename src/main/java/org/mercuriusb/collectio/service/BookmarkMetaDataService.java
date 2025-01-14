@@ -4,9 +4,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
-import org.mercuriusb.collectio.dto.bookmarkmetadata.BookmarkMetaDataDto;
-import org.mercuriusb.collectio.mapper.BookmarkMetaDataMapper;
-import org.mercuriusb.collectio.model.BookmarkMetaData;
+import org.mercuriusb.collectio.dto.BookmarkMetaDataDto;
+import org.mercuriusb.collectio.mapper.BookmarkUserMetaDataMapper;
+import org.mercuriusb.collectio.model.BookmarkUserMetaData;
 import org.mercuriusb.collectio.repository.BookmarkMetaDataRepository;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class BookmarkMetaDataService{
   @Inject
   BookmarkMetaDataRepository repository;
   @Inject
-  BookmarkMetaDataMapper mapper;
+  BookmarkUserMetaDataMapper mapper;
 
   public BookmarkMetaDataDto getById(Long id){
     return mapper.toDto(repository.findById(id));
@@ -31,8 +31,8 @@ public class BookmarkMetaDataService{
   }
 
   @Transactional
-  public BookmarkMetaData create(BookmarkMetaDataDto dto){
-    BookmarkMetaData entity = mapper.toEntity(dto);
+  public BookmarkUserMetaData create(BookmarkMetaDataDto dto){
+    BookmarkUserMetaData entity = mapper.toEntity(dto);
     repository.persist(entity);
     return entity;
   }
@@ -50,9 +50,9 @@ public class BookmarkMetaDataService{
 
   @Transactional
   public BookmarkMetaDataDto update(long id, BookmarkMetaDataDto dto) throws NotFoundException{
-    BookmarkMetaData entity = repository.findById(id);
+    BookmarkUserMetaData entity = repository.findById(id);
     if(entity == null){
-      throw new NotFoundException(String.format("No BookmarkMetaData found with id[%s]", dto.getId()));
+      throw new NotFoundException(String.format("No BookmarkUserMetaData found with id[%s]", dto.id()));
     }
     mapper.update(dto, entity);
     repository.persist(entity);

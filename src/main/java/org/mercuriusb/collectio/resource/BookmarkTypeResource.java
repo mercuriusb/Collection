@@ -14,7 +14,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
-import org.mercuriusb.collectio.dto.bookmarktype.BookmarkTypeDto;
+import org.mercuriusb.collectio.dto.BookmarkTypeDto;
 import org.mercuriusb.collectio.model.BookmarkType;
 import org.mercuriusb.collectio.service.BookmarkTypeService;
 import org.slf4j.Logger;
@@ -102,7 +102,7 @@ public class BookmarkTypeResource{
   )
   public Response createBookmarkType(@RequestBody(required = true) @Valid BookmarkTypeDto bookmarktype){
     service.create(bookmarktype);
-    URI bookmarktypeUrl = URI.create("/api/v1/bookmarktypes/" + bookmarktype.getId());
+    URI bookmarktypeUrl = URI.create("/api/v1/bookmarktypes/" + bookmarktype.id());
     LOGGER.info("New bookmarktype added at URL {}", bookmarktypeUrl);
     return Response.created(bookmarktypeUrl).build();
   }

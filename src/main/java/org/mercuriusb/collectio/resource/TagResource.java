@@ -16,7 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
-import org.mercuriusb.collectio.dto.tag.TagDto;
+import org.mercuriusb.collectio.dto.TagDto;
 import org.mercuriusb.collectio.model.Tag;
 import org.mercuriusb.collectio.service.TagService;
 import org.slf4j.Logger;
@@ -130,7 +130,7 @@ public class TagResource{
   public Response createTag(@RequestBody(required = true) @Valid TagDto tag,@Context ContainerRequestContext requestContext){
     Long userId = (Long)requestContext.getProperty("userId");
     TagDto resultTag = service.createIfNotExists(tag,userId);
-    URI tagUrl = URI.create("/api/v1/tags/" + tag.getId());
+    URI tagUrl = URI.create("/api/v1/tags/" + tag.id());
     LOGGER.info("New tag added at URL {}", tagUrl);
     return Response.created(tagUrl).build();
   }

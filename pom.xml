@@ -13,6 +13,7 @@
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
         <quarkus.platform.version>3.17.4</quarkus.platform.version>
+        <record.builder.version>41</record.builder.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.0</surefire-plugin.version>
         <mapstruct.version>1.6.2</mapstruct.version>
@@ -109,6 +110,13 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-messaging-kafka</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.soabase.record-builder</groupId>
+            <artifactId>record-builder-core</artifactId>
+            <version>${record.builder.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -196,6 +204,11 @@
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.soabase.record-builder</groupId>
+                            <artifactId>record-builder-processor</artifactId>
+                            <version>${record.builder.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

@@ -16,8 +16,8 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
-import org.mercuriusb.collectio.dto.bookmarkmetadata.BookmarkMetaDataDto;
-import org.mercuriusb.collectio.model.BookmarkMetaData;
+import org.mercuriusb.collectio.dto.BookmarkMetaDataDto;
+import org.mercuriusb.collectio.model.BookmarkUserMetaData;
 import org.mercuriusb.collectio.service.BookmarkMetaDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class BookmarkMetaDataResource{
               responseCode = "200",
               description = "Get All BookmarkMetaDatas",
               content = @Content(mediaType = "application/json",
-                  schema = @Schema(type = SchemaType.ARRAY, implementation = BookmarkMetaData.class))),
+                  schema = @Schema(type = SchemaType.ARRAY, implementation = BookmarkUserMetaData.class))),
           @APIResponse(
               responseCode = "404",
               description = "No bookmarkmetadatas found",
@@ -67,12 +67,12 @@ public class BookmarkMetaDataResource{
       value = {
           @APIResponse(
               responseCode = "200",
-              description = "Get BookmarkMetaData by bookmarkmetadataId",
+              description = "Get BookmarkUserMetaData by bookmarkmetadataId",
               content = @Content(mediaType = "application/json",
-                  schema = @Schema(type = SchemaType.OBJECT, implementation = BookmarkMetaData.class))),
+                  schema = @Schema(type = SchemaType.OBJECT, implementation = BookmarkUserMetaData.class))),
           @APIResponse(
               responseCode = "404",
-              description = "No BookmarkMetaData found for the bookmarkmetadataId provided",
+              description = "No BookmarkUserMetaData found for the bookmarkmetadataId provided",
               content = @Content(mediaType = "application/json"))
       }
   )
@@ -95,19 +95,19 @@ public class BookmarkMetaDataResource{
       value = {
           @APIResponse(
               responseCode = "201",
-              description = "BookmarkMetaData created successfully",
+              description = "BookmarkUserMetaData created successfully",
               content = @Content(mediaType = "application/json",
-                  schema = @Schema(type = SchemaType.OBJECT, implementation = BookmarkMetaData.class))),
+                  schema = @Schema(type = SchemaType.OBJECT, implementation = BookmarkUserMetaData.class))),
           @APIResponse(
               responseCode = "400",
-              description = "BookmarkMetaData already exists with bookmarkmetadataId",
+              description = "BookmarkUserMetaData already exists with bookmarkmetadataId",
               content = @Content(mediaType = "application/json")),
       }
   )
   public Response createBookmarkMetaData(@RequestBody(required = true) @Valid BookmarkMetaDataDto bookmarkmetadata,@Context ContainerRequestContext requestContext){
     Long userId = (Long)requestContext.getProperty("userId");
     service.create(bookmarkmetadata);
-    URI bookmarkmetadataUrl = URI.create("/api/v1/bookmarkmetadatas/" + bookmarkmetadata.getId());
+    URI bookmarkmetadataUrl = URI.create("/api/v1/bookmarkmetadatas/" + bookmarkmetadata.id());
     LOGGER.info("New bookmarkmetadata added at URL {}", bookmarkmetadataUrl);
     return Response.created(bookmarkmetadataUrl).build();
   }
@@ -120,12 +120,12 @@ public class BookmarkMetaDataResource{
       value = {
           @APIResponse(
               responseCode = "200",
-              description = "BookmarkMetaData successfully updated",
+              description = "BookmarkUserMetaData successfully updated",
               content = @Content(mediaType = "application/json",
-                  schema = @Schema(type = SchemaType.OBJECT, implementation = BookmarkMetaData.class))),
+                  schema = @Schema(type = SchemaType.OBJECT, implementation = BookmarkUserMetaData.class))),
           @APIResponse(
               responseCode = "404",
-              description = "No BookmarkMetaData found for bookmarkmetadataId provided",
+              description = "No BookmarkUserMetaData found for bookmarkmetadataId provided",
               content = @Content(mediaType = "application/json")),
       }
   )
@@ -136,7 +136,7 @@ public class BookmarkMetaDataResource{
       return Response.status(Response.Status.NOT_FOUND).build();
     }
     dto = service.update(id, bookmarkmetadata);
-    LOGGER.info("BookmarkMetaData with id {} updated successfully", id);
+    LOGGER.info("BookmarkUserMetaData with id {} updated successfully", id);
     return Response.ok(dto).build();
   }
 
@@ -148,19 +148,19 @@ public class BookmarkMetaDataResource{
       value = {
           @APIResponse(
               responseCode = "204",
-              description = "BookmarkMetaData successfully deleted",
+              description = "BookmarkUserMetaData successfully deleted",
               content = @Content(mediaType = "application/json",
-                  schema = @Schema(type = SchemaType.OBJECT, implementation = BookmarkMetaData.class))),
+                  schema = @Schema(type = SchemaType.OBJECT, implementation = BookmarkUserMetaData.class))),
           @APIResponse(
               responseCode = "404",
-              description = "No BookmarkMetaData found for bookmarkmetadataId provided",
+              description = "No BookmarkUserMetaData found for bookmarkmetadataId provided",
               content = @Content(mediaType = "application/json")),
       }
   )
   public Response deleteBookmarkMetaData(@PathParam("id") Long id,@Context ContainerRequestContext requestContext){
     Long userId = (Long)requestContext.getProperty("userId");
     if(service.delete(id)){
-      LOGGER.info("BookmarkMetaData deleted with id {}", id);
+      LOGGER.info("BookmarkUserMetaData deleted with id {}", id);
       return Response.noContent().build();
     }
     ;

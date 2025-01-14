@@ -36,7 +36,7 @@ public class Bookmark extends BaseEntity{
   private Set<Tag> tags = new LinkedHashSet<>();
 
   @OneToMany(mappedBy = "bookmark", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<BookmarkMetaData> bookmarkMetaData = new LinkedHashSet<>();;
+  private Set<BookmarkUserMetaData> bookmarkUserMetaData = new LinkedHashSet<>();;
 
   @ManyToOne(optional = true)
   @JoinColumn(name = "type_id", nullable = true)
@@ -46,26 +46,26 @@ public class Bookmark extends BaseEntity{
 
 
 
-  public Set<BookmarkMetaData> getBookmarkMetaData(){
-    return bookmarkMetaData;
+  public Set<BookmarkUserMetaData> getBookmarkMetaData(){
+    return bookmarkUserMetaData;
   }
 
-  public void setBookmarkMetaData(Set<BookmarkMetaData> bookmarkMetaData){
-    this.bookmarkMetaData = bookmarkMetaData;
+  public void setBookmarkMetaData(Set<BookmarkUserMetaData> bookmarkUserMetaData){
+    this.bookmarkUserMetaData = bookmarkUserMetaData;
   }
 
-  public Bookmark addBookmarkMetaData(BookmarkMetaData bookmarkMetaData){
-    this.bookmarkMetaData.add(bookmarkMetaData);
-    if(bookmarkMetaData != null){
-      bookmarkMetaData.setBookmark(this);
+  public Bookmark addBookmarkMetaData(BookmarkUserMetaData bookmarkUserMetaData){
+    this.bookmarkUserMetaData.add(bookmarkUserMetaData);
+    if(bookmarkUserMetaData != null){
+      bookmarkUserMetaData.setBookmark(this);
     }
     return this;
   }
 
-  public Bookmark removeBookmarkMetaData(BookmarkMetaData bookmarkMetaData){
-    this.bookmarkMetaData.remove(bookmarkMetaData);
-    if(bookmarkMetaData != null){
-      bookmarkMetaData.setBookmark(null);
+  public Bookmark removeBookmarkMetaData(BookmarkUserMetaData bookmarkUserMetaData){
+    this.bookmarkUserMetaData.remove(bookmarkUserMetaData);
+    if(bookmarkUserMetaData != null){
+      bookmarkUserMetaData.setBookmark(null);
     }
     return this;
   }

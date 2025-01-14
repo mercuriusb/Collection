@@ -5,7 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
-import org.mercuriusb.collectio.dto.user.UserDto;
+import org.mercuriusb.collectio.dto.UserDto;
 import org.mercuriusb.collectio.mapper.UserMapper;
 import org.mercuriusb.collectio.model.User;
 import org.mercuriusb.collectio.repository.UserRepository;
@@ -47,7 +47,7 @@ public class UserService{
   public UserDto update(long id,UserDto dto) throws NotFoundException {
     User entity = repository.findById(id);
     if(entity == null){
-      throw new NotFoundException(String.format("No User found with id[%s]", dto.getId()));
+      throw new NotFoundException(String.format("No User found with id[%s]", dto.id()));
     }
     mapper.update(dto, entity);
     repository.persist(entity);

@@ -17,7 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
-import org.mercuriusb.collectio.dto.bookmark.BookmarkDto;
+import org.mercuriusb.collectio.dto.BookmarkDto;
 import org.mercuriusb.collectio.model.Bookmark;
 import org.mercuriusb.collectio.service.BookmarkService;
 import org.slf4j.Logger;
@@ -107,7 +107,7 @@ public class BookmarkResource{
   )
   public Response createBookmark(@RequestBody(required = true) @Valid BookmarkDto bookmark,@Context ContainerRequestContext requestContext){
     Long userId = (Long)requestContext.getProperty("userId");
-    URI bookmarkUrl = URI.create("/api/v1/bookmarks/" + bookmark.getId());
+    URI bookmarkUrl = URI.create("/api/v1/bookmarks/" + bookmark.id());
     LOGGER.info("New bookmark added at URL {}", bookmarkUrl);
     return Response.created(bookmarkUrl).build();
   }

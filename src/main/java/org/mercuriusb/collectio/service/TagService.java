@@ -9,8 +9,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotAllowedException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
-import org.mercuriusb.collectio.dto.tag.TagBrowseDto;
-import org.mercuriusb.collectio.dto.tag.TagDto;
+import org.mercuriusb.collectio.dto.TagBrowseDto;
+import org.mercuriusb.collectio.dto.TagDto;
 import org.mercuriusb.collectio.mapper.TagMapper;
 import org.mercuriusb.collectio.model.Tag;
 import org.mercuriusb.collectio.repository.TagRepository;
@@ -71,7 +71,7 @@ public class TagService{
 
   @Transactional
   public TagDto createIfNotExists(TagDto dto, long userId)  {
-      Tag entity = repository.findByTagAndUserID(dto.getValue(), dto.getUser().getId());
+      Tag entity = repository.findByTagAndUserID(dto.value(), dto.user().id());
       if(entity == null){
         entity = mapper.toEntity(dto);
         entity.setUser(userRepository.findById(userId));
@@ -94,12 +94,12 @@ public class TagService{
 
   @Transactional
   public TagDto update(long id,TagDto dto, long userId) throws WebApplicationException {
-    if(id != dto.getId()){
-      throw new NotAllowedException(String.format("id in tag %s and given id %s are different: ", id,dto.getId()));
+    if(id != dto.id()){
+      throw new NotAllowedException(String.format("id in tag %s and given id %s are different: ", id,dto.id()));
     }
     Tag entity = repository.findById(id);
     if(entity == null){
-      throw new NotFoundException(String.format("No Tag found with id[%s]", dto.getId()));
+      throw new NotFoundException(String.format("No Tag found with id[%s]", dto.id()));
     }
     if(entity.getUser().getId() != userId){
       throw new NotAllowedException(String.format("User with id[%s]  is not allowed to update tag with id %s", userId,id));

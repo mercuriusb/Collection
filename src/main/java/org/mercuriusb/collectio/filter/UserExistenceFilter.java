@@ -5,7 +5,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.ext.Provider;
-import org.mercuriusb.collectio.dto.user.UserDto;
+import org.mercuriusb.collectio.dto.UserDto;
 import org.mercuriusb.collectio.service.UserService;
 import org.mercuriusb.collectio.model.User;
 
@@ -24,7 +24,7 @@ public class UserExistenceFilter implements ContainerRequestFilter {
 
     // Ensure user exists and retrieve their database record
     UserDto user = userService.ensureUserExistsAndGet(username);
-    requestContext.setProperty("userId", user.getId());
+    requestContext.setProperty("userId", user.id());
 
   }
 }

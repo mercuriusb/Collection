@@ -1,7 +1,7 @@
 package org.mercuriusb.collectio.mapper;
 
 import org.mapstruct.*;
-import org.mercuriusb.collectio.dto.user.UserDto;
+import org.mercuriusb.collectio.dto.UserDto;
 import org.mercuriusb.collectio.model.User;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA_CDI)

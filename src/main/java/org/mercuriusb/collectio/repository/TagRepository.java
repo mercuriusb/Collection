@@ -5,11 +5,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.hibernate.query.Query;
 import org.hibernate.query.ResultListTransformer;
 import org.jboss.logging.Logger;
-import org.mercuriusb.collectio.dto.bookmark.BookmarkViewDto;
-import org.mercuriusb.collectio.dto.bookmark.BookmarkViewDtoBuilder;
-import org.mercuriusb.collectio.dto.tag.TagBrowseDto;
-import org.mercuriusb.collectio.dto.tag.TagDto;
-import org.mercuriusb.collectio.dto.tag.TagDtoBuilder;
+import org.mercuriusb.collectio.dto.BookmarkViewDto;
+import org.mercuriusb.collectio.dto.BookmarkViewDtoBuilder;
+import org.mercuriusb.collectio.dto.TagBrowseDto;
+import org.mercuriusb.collectio.dto.TagDto;
+import org.mercuriusb.collectio.dto.TagDtoBuilder;
 import org.mercuriusb.collectio.model.Tag;
 
 import java.time.Instant;
@@ -63,7 +63,8 @@ public class TagRepository implements PanacheRepository<Tag>{
               (String) tuple[2],        //value
               tuple[3] != null ? tuple[3].toString() : "",    //path
               ((Number) tuple[4]).intValue(),          //count
-              new LinkedHashSet<>()    //bookmarks
+              new LinkedHashSet<>(),    //bookmarks
+              null
           );
         }
     ).getResultList();
@@ -72,7 +73,7 @@ public class TagRepository implements PanacheRepository<Tag>{
         """
             select cb.id, cb."uuid",cb.created,cb.modified,cb.last_viewed, cb.url,cb.original_title,cb.summary,cbmd.title,cbmd.description,cbmd.state,ct.id,ct."uuid",ct.value from col_bookmark cb
             join col_bookmark_tags cbt on cbt.bookmark_id = cb.id
-            join col_bookmark_meta_data cbmd on cbmd.bookmark_id  = cb.id
+            join col_bookmark_user_meta_data cbmd on cbmd.bookmark_id  = cb.id
             join col_tag ct on ct.id  = cbt.tags_id
             where ct.user_id = 0 and cbmd.user_id = %d
             and ct."path" ~ '%s' order by cbmd.title
@@ -83,8 +84,6 @@ public class TagRepository implements PanacheRepository<Tag>{
       BookmarkViewDto dto = null;
       if(bookmarkViewDtoMap.containsKey(id)){
         dto = bookmarkViewDtoMap.get(id);
-        Long tagId = (Long) tuple[11];      //tag id
-        UUID tagUUID = (UUID) tuple[12];        //tag uuid
       }else{
         UUID uuid = (UUID) tuple[1];          //uuid
         Instant created = (Instant) tuple[2];        //created
@@ -96,31 +95,31 @@ public class TagRepository implements PanacheRepository<Tag>{
         String title = (String) tuple[8];        //title
         String description = (String) tuple[9];        //description
         String state = (String) tuple[10];        //state
-        dto = new BookmarkViewDtoBuilder()
-            .setId(id)
-            .setUuid(uuid)
-            .setCreated(created != null ? OffsetDateTime.ofInstant(created, ZoneId.systemDefault()) : null)
-            .setModified(modified != null ?  OffsetDateTime.ofInstant(modified, ZoneId.systemDefault()) : null)
-            .setLastViewed(lastviewed != null ? OffsetDateTime.ofInstant(lastviewed, ZoneId.systemDefault()) : null)
-            .setUrl(url)
-            .setOriginalTitle(originalTitle)
-            .setSummary(summary)
-            .setTitle(title)
-            .setDescription(description)
-            .setState(state)
-            .setTags(new LinkedHashSet<>())
-            .createBookmarkViewDto();
+        dto = BookmarkViewDtoBuilder.builder()
+            .id(id)
+            .uuid(uuid)
+            .created(created != null ? OffsetDateTime.ofInstant(created, ZoneId.systemDefault()) : null)
+            .modified(modified != null ?  OffsetDateTime.ofInstant(modified, ZoneId.systemDefault()) : null)
+            .lastViewed(lastviewed != null ? OffsetDateTime.ofInstant(lastviewed, ZoneId.systemDefault()) : null)
+            .url(url)
+            .originalTitle(originalTitle)
+            .summary(summary)
+            .title(title)
+            .description(description)
+            .state(state)
+            .tags(new LinkedHashSet<>())
+            .build();
         bookmarkViewDtoMap.put(id,dto);
       }
       Long tagId = (Long) tuple[11];      //tag id
       UUID tagUUID = (UUID) tuple[12];        //tag uuid
       String tagValue = (String) tuple[13];        //tag value
-      TagDto tagDto = new TagDtoBuilder().setId(tagId).setUuid(tagUUID).setValue(tagValue).createTagDto();
-      dto.getTags().add(tagDto);
+      TagDto tagDto = TagDtoBuilder.builder().id(tagId).uuid(tagUUID).value(tagValue).build();
+      dto.tags().add(tagDto);
     }
     for(TagBrowseDto dto : dtos){
-      if(dto.getPath().equals(path)){
-        dto.getBookmarks().addAll(bookmarkViewDtoMap.values());
+      if(dto.path().equals(path)){
+        dto.bookmarks().addAll(bookmarkViewDtoMap.values());
         break;
       }
     }

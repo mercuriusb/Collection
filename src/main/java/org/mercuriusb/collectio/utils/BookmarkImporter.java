@@ -6,14 +6,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.mercuriusb.collectio.dto.bookmark.BookmarkDto;
-import org.mercuriusb.collectio.dto.bookmark.BookmarkDtoBuilder;
-import org.mercuriusb.collectio.dto.bookmarkmetadata.BookmarkMetaDataDto;
-import org.mercuriusb.collectio.dto.bookmarkmetadata.BookmarkMetaDataDtoBuilder;
-import org.mercuriusb.collectio.dto.bookmarktype.BookmarkTypeDto;
-import org.mercuriusb.collectio.dto.tag.TagDto;
-import org.mercuriusb.collectio.dto.tag.TagDtoBuilder;
-import org.mercuriusb.collectio.dto.user.UserDto;
+import org.mercuriusb.collectio.dto.BookmarkDto;
+import org.mercuriusb.collectio.dto.BookmarkDtoBuilder;
+import org.mercuriusb.collectio.dto.BookmarkMetaDataDto;
+import org.mercuriusb.collectio.dto.BookmarkMetaDataDtoBuilder;
+import org.mercuriusb.collectio.dto.BookmarkTypeDto;
+import org.mercuriusb.collectio.dto.TagDto;
+import org.mercuriusb.collectio.dto.TagDtoBuilder;
+import org.mercuriusb.collectio.dto.UserDto;
 import org.mercuriusb.collectio.service.BookmarkService;
 import org.mercuriusb.collectio.service.BookmarkTypeService;
 import org.mercuriusb.collectio.service.TagService;
@@ -21,6 +21,7 @@ import org.mercuriusb.collectio.service.UserService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashSet;
 
 @ApplicationScoped
 public class BookmarkImporter{
@@ -51,11 +52,11 @@ public class BookmarkImporter{
       Document doc = Jsoup.parse(inputFile, "UTF-8");
 
       Element root = doc.body();
-      TagDto currentTagDto = new TagDtoBuilder()
-          .setUser(userDto)
-          .setValue("root")
-          .createTagDto();
-      currentTagDto = tagService.createIfNotExists(currentTagDto,userDto.getId());
+      TagDto currentTagDto = TagDtoBuilder.builder()
+          .user(userDto)
+          .value("root")
+          .build();
+      currentTagDto = tagService.createIfNotExists(currentTagDto,userDto.id());
       parseFolder(root, "root", userDto, currentTagDto);
       System.out.println("TEST");
     } catch (IOException e) {
@@ -78,27 +79,27 @@ public class BookmarkImporter{
             String path = tempFolder.replaceAll("/","." );
             path = path.replaceAll("[^\\.a-zA-Z0-9_]","_");
              */
-            currentTagDto = new TagDtoBuilder()
-                .setUser(userDto)
-                .setValue(tempFolder)
-                .createTagDto();
-            currentTagDto = tagService.createIfNotExists(currentTagDto,userDto.getId());
+            currentTagDto = TagDtoBuilder.builder()
+                .user(userDto)
+                .value(tempFolder)
+                .build();
+            currentTagDto = tagService.createIfNotExists(currentTagDto,userDto.id());
           }else if(child.tagName().equalsIgnoreCase("a")){
             String title = child.text();
             String url = child.attr("HREF");
-            BookmarkMetaDataDto bookmarkMetaDataDto = new BookmarkMetaDataDtoBuilder()
-                .setUser(userDto)
-                .setTitle(title)
-                .createBookmarkMetaDataDto();
-            BookmarkDto bookmarkDto = new BookmarkDtoBuilder()
-                .setOriginalTitle(title)
-                .setUrl(url)
-                .setType(bookmarkTypeDto)
-                .createBookmarkDto();
-            bookmarkDto.getTags().add(currentTagDto);
-            bookmarkDto.getBookmarkMetaData().add(bookmarkMetaDataDto);
+            BookmarkMetaDataDto bookmarkMetaDataDto = BookmarkMetaDataDtoBuilder.builder()
+                .user(userDto)
+                .title(title)
+                .build();
+            BookmarkDto bookmarkDto = BookmarkDtoBuilder.builder()
+                .originalTitle(title)
+                .url(url)
+                .type(bookmarkTypeDto)
+                .build();
+            bookmarkDto.tags().add(currentTagDto);
+            bookmarkDto.bookmarkMetaData().add(bookmarkMetaDataDto);
             //log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            bookmarkDto = bookmarkService.createOrUpdate(bookmarkDto, userDto.getId(),false);
+            bookmarkDto = bookmarkService.createOrUpdate(bookmarkDto, userDto.id(),false);
             //log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             log.info("bookmark: " + currentFolder + ":" + title); // + ":" + url);
           }else if(child.tagName().equalsIgnoreCase("dl")){

@@ -70,8 +70,8 @@ class UserTest{
     User user1 = new User();
     User user2 = new User();
 
-    Set<BookmarkMetaData> bmData1 = new LinkedHashSet<>();
-    Set<BookmarkMetaData> bmData2 = new LinkedHashSet<>();
+    Set<BookmarkUserMetaData> bmData1 = new LinkedHashSet<>();
+    Set<BookmarkUserMetaData> bmData2 = new LinkedHashSet<>();
 
     user1.setBookmarkMetaData(bmData1);
     user2.setBookmarkMetaData(bmData2);
@@ -85,9 +85,9 @@ class UserTest{
     User user1 = new User();
     User user2 = new User();
 
-    Set<BookmarkMetaData> bmData1 = new LinkedHashSet<>();
-    bmData1.add(new BookmarkMetaData());
-    Set<BookmarkMetaData> bmData2 = new LinkedHashSet<>();
+    Set<BookmarkUserMetaData> bmData1 = new LinkedHashSet<>();
+    bmData1.add(new BookmarkUserMetaData());
+    Set<BookmarkUserMetaData> bmData2 = new LinkedHashSet<>();
 
     /*
     user1.setBookmarkMetaData(bmData1);

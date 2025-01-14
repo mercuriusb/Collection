@@ -12,15 +12,15 @@ public class TreeUtils {
 
     // Map nodes by their paths
     for (T node : nodes) {
-      pathMap.put(node.getPath(), node);
-      if (node.getPath().equals(rootPath)) {
+      pathMap.put(node.path(), node);
+      if (node.path().equals(rootPath)) {
         root = node;
       }
     }
 
     // Link children to their parents
     for (T node : nodes) {
-      String parentPath = getParentPath(node.getPath());
+      String parentPath = getParentPath(node.path());
       T parent = pathMap.get(parentPath);
       if (parent != null) {
         parent.addChild(node);

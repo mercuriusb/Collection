@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
-import org.mercuriusb.collectio.dto.bookmarktype.BookmarkTypeDto;
+import org.mercuriusb.collectio.dto.BookmarkTypeDto;
 import org.mercuriusb.collectio.mapper.BookmarkTypeMapper;
 import org.mercuriusb.collectio.model.BookmarkType;
 import org.mercuriusb.collectio.repository.BookmarkTypeRepository;
@@ -46,7 +46,7 @@ public class BookmarkTypeService{
   public BookmarkTypeDto update(long id, BookmarkTypeDto dto) throws NotFoundException{
     BookmarkType entity = repository.findById(id);
     if(entity == null){
-      throw new NotFoundException(String.format("No BookmarkType found with id[%s]", dto.getId()));
+      throw new NotFoundException(String.format("No BookmarkType found with id[%s]", dto.id()));
     }
     mapper.update(dto, entity);
     repository.persist(entity);

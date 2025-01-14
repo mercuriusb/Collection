@@ -15,7 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
-import org.mercuriusb.collectio.dto.user.UserDto;
+import org.mercuriusb.collectio.dto.UserDto;
 import org.mercuriusb.collectio.model.User;
 import org.mercuriusb.collectio.service.UserService;
 import org.slf4j.Logger;

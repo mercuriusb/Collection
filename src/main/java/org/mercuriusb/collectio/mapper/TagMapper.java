@@ -1,12 +1,11 @@
 package org.mercuriusb.collectio.mapper;
 
 import org.mapstruct.*;
-import org.mercuriusb.collectio.dto.bookmark.BookmarkDto;
-import org.mercuriusb.collectio.dto.bookmarkmetadata.BookmarkMetaDataDto;
-import org.mercuriusb.collectio.dto.tag.TagBrowseDto;
-import org.mercuriusb.collectio.dto.tag.TagDto;
+import org.mercuriusb.collectio.dto.BookmarkDto;
+import org.mercuriusb.collectio.dto.BookmarkMetaDataDto;
+import org.mercuriusb.collectio.dto.TagDto;
 import org.mercuriusb.collectio.model.Bookmark;
-import org.mercuriusb.collectio.model.BookmarkMetaData;
+import org.mercuriusb.collectio.model.BookmarkUserMetaData;
 import org.mercuriusb.collectio.model.Tag;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA_CDI)
@@ -42,6 +41,6 @@ public interface TagMapper{
   @Mapping(target = "bookmark", ignore = true)
 
   @Mapping(target = "user", ignore = true)
-  BookmarkMetaDataDto toBookmarkMetaDataDto(BookmarkMetaData bookmarkMetaData);
+  BookmarkMetaDataDto toBookmarkMetaDataDto(BookmarkUserMetaData bookmarkUserMetaData);
 
 }

@@ -6,7 +6,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.util.Objects;
 
 @Entity
-public class BookmarkMetaData{
+public class BookmarkUserMetaData{
   @ManyToOne
   @JoinColumn(name = "bookmark_id")
   private Bookmark bookmark;
@@ -42,7 +42,7 @@ public class BookmarkMetaData{
     return id;
   }
 
-  public BookmarkMetaData setId(Long id){
+  public BookmarkUserMetaData setId(Long id){
     this.id = id;
     return this;
   }
@@ -51,7 +51,7 @@ public class BookmarkMetaData{
     return title;
   }
 
-  public BookmarkMetaData setTitle(String title){
+  public BookmarkUserMetaData setTitle(String title){
     this.title = title;
     return this;
   }
@@ -60,7 +60,7 @@ public class BookmarkMetaData{
     return description;
   }
 
-  public BookmarkMetaData setDescription(String description){
+  public BookmarkUserMetaData setDescription(String description){
     this.description = description;
     return this;
   }
@@ -69,7 +69,7 @@ public class BookmarkMetaData{
     return state;
   }
 
-  public BookmarkMetaData setState(String state){
+  public BookmarkUserMetaData setState(String state){
     this.state = state;
     return this;
   }
@@ -78,7 +78,7 @@ public class BookmarkMetaData{
     return user;
   }
 
-  public BookmarkMetaData setUser(User user){
+  public BookmarkUserMetaData setUser(User user){
     this.user = user;
     return this;
   }
@@ -96,7 +96,7 @@ public class BookmarkMetaData{
     if(thisEffectiveClass != oEffectiveClass){
       return false;
     }
-    BookmarkMetaData that = (BookmarkMetaData) o;
+    BookmarkUserMetaData that = (BookmarkUserMetaData) o;
     return getId() != null && Objects.equals(getId(), that.getId());
   }
 

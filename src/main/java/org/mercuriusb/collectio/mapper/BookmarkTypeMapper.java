@@ -1,7 +1,7 @@
 package org.mercuriusb.collectio.mapper;
 
 import org.mapstruct.*;
-import org.mercuriusb.collectio.dto.bookmarktype.BookmarkTypeDto;
+import org.mercuriusb.collectio.dto.BookmarkTypeDto;
 import org.mercuriusb.collectio.model.BookmarkType;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA_CDI)
